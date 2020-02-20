@@ -23,7 +23,7 @@ class Choice  extends Component {
 
         const choices = Object.entries(data).map(el => {
             const choiceName = el[0].substr(0, 1).toUpperCase() +
-                el[0].substr(1, el[0].lastIndexOf('M') - 1);
+                               el[0].substr(1, el[0].lastIndexOf('M') - 1);
             return <option key={uniqid()} value={el[1].field}>{`${choiceName}`}</option>
         });
 
