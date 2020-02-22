@@ -12,7 +12,7 @@ const NameForm = () => {
 
     return (
         <div>
-        <form onSubmit="" >
+        <form>
             <Choice />
             <input type="text" placeholder="Enter your name" />
             <button onClick={(e) => submithName(e)} >PLAY</button>

@@ -1,3 +1,13 @@
+/*.cell {*/
+/*    border: 1px solid cadetblue;*/
+/*}*/
+
+/*.cell {*/
+/*    background: #ccc;*/
+/*    position: absolute;*/
+/*}*/
+
 .cell {
-    border: 1px solid cadetblue;
+    background: lawngreen;
+    position: absolute;
 }
