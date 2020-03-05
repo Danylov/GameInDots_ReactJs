@@ -1,10 +1,12 @@
-import {FETCH_DATA_PENDING, FETCH_DATA_SUCCESS, FETCH_DATA_ERROR, ISSELECTED} from '../actions';
+import {FETCH_DATA_PENDING, FETCH_DATA_SUCCESS, FETCH_DATA_ERROR, ISSELECTED, RAND_ENUM} from '../actions';
 
 const initialState = {
     pending: false,
     data: [],
     error: null,
-    isSelected: 5
+    field: 5,
+    delay: 2000,
+    prRandEnum: false
 };
 
 export function Reducer(state = initialState, action) {
@@ -29,7 +31,13 @@ export function Reducer(state = initialState, action) {
         case ISSELECTED:
             return {
                 ...state,
-                isSelected: Number(action.isSelected)
+                field: action.field,
+                delay: action.delay
+            }
+        case RAND_ENUM:
+            return {
+                ...state,
+                prRandEnum: action.prRandEnum
             }
         default:
             return state;
@@ -39,3 +47,6 @@ export function Reducer(state = initialState, action) {
 export const getData        = state => state.data;
 export const getDataPending = state => state.pending;
 export const getDataError   = state => state.error;
+export const getField       = state => state.field;
+export const getDelay       = state => state.delay;
+export const getPrRendEnum  = state => state.prRandEnum;

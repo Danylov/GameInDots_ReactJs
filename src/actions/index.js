@@ -3,6 +3,7 @@ export const FETCH_DATA_PENDING = 'FETCH_DATA_PENDING';
 export const FETCH_DATA_SUCCESS = 'FETCH_DATA_SUCCESS';
 export const FETCH_DATA_ERROR   = 'FETCH_DATA_ERROR';
 export const ISSELECTED         = 'ISSELECTED';
+export const RAND_ENUM          = 'RAND_ENUM';
 
 export function fetchDataPending() {
     return {
@@ -27,6 +28,14 @@ export function fetchDataError(error) {
 export const isSelected = event => {
     return {
         type: ISSELECTED,
-        isSelected: event.target.value
+        field: parseInt(event.target.value.split('|')[0]),
+        delay: parseInt(event.target.value.split('|')[1])
+    }
+}
+
+export const begRandEnum = (prRandEnum) => {
+    return {
+        type: RAND_ENUM,
+        prRandEnum: prRandEnum
     }
 }

@@ -1,13 +1,15 @@
-/*.cell {*/
-/*    border: 1px solid cadetblue;*/
-/*}*/
 
-/*.cell {*/
-/*    background: #ccc;*/
-/*    position: absolute;*/
-/*}*/
-
-.cell {
+.cell_green {
     background: lawngreen;
+    position: absolute;
+}
+
+.cell_blue {
+    background: deepskyblue;
+    position: absolute;
+}
+
+.cell_red {
+    background: orangered;
     position: absolute;
 }

@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import uniqid from 'uniqid';
 import Cell from '../cell';
+import {getPrRendEnum, getField, getDelay} from "../../reducers";
 
 import './board.css';
 
@@ -61,21 +62,21 @@ class Board  extends React.Component {
   }
 
   setInit = () => {
-    this.setState({rows : this.props.isSelected, cols : this.props.isSelected, cells: []},
+    this.setState({rows : this.props.field, cols : this.props.field, cells: []},
         () => {this.board = this.makeEmptyBoard()});
   };
 
-  componentDidMount() {
+  componentWillMount() {
     this.setInit();
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.isSelected !== prevProps.isSelected)  this.setInit();
+    if (this.props.field !== prevProps.field)  this.setInit();
   }
 
   render() {
-    const { isSelected } = this.props;
-    const BOARD_W_H = isSelected * CELL_SIZE + 1;
+    const { field, delay, prRandEnum } = this.props;
+    const BOARD_W_H = field * CELL_SIZE + 1;
     const {cells} = this.state;
 
     return (
@@ -92,8 +93,10 @@ class Board  extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    isSelected: state.isSelected
+    prRandEnum: getPrRendEnum(state),
+    field:      getField(state),
+    delay:      getDelay(state)
   }
 }
 
-export default connect(mapStateToProps)(Board);
+export default connect(mapStateToProps, undefined)(Board);
