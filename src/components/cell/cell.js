@@ -2,14 +2,10 @@ import React from 'react';
 
 import './cell.css';
 
-class Cell extends React.Component {
-    render() {
+const Cell = ({x, y, CELL_SIZE, mode}) => {
+
 // mode:  0 - not active (white),                          1 - PC choose that cell (blue),
 //        2 - player clicked on cell after mode 1 (green), 3 - player not clicked on cell after mode 1 (red)
-
-        const { x, y, CELL_SIZE, mode } = this.props;
-
-
 
         let clN;
         switch(mode) {
@@ -28,7 +24,6 @@ class Cell extends React.Component {
                 height: `${CELL_SIZE - 1}px`,
             }} />
         );
-    }
 }
 
 export default Cell;

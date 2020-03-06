@@ -2,7 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import uniqid from 'uniqid';
 import Cell from '../cell';
-import {getPrRendEnum, getField, getDelay} from "../../reducers";
+import {getPrRendEnum, getField, getDelay, getPlayerName} from "../../reducers";
+import {setWinner} from "../../actions";
 
 import './board.css';
 
@@ -102,6 +103,8 @@ class Board  extends React.Component {
     {
       this.board[y_cell][x_cell] = 0;
       clearInterval(timerId);
+      if (sumGreen < sumRed)  this.props.setWinner("Computer");
+      else                    this.props.setWinner(this.props.playerName);
     }
     else  this.board[y_cell][x_cell] = 1;
     this.setState({ cells: this.makeCells() });
@@ -124,12 +127,19 @@ class Board  extends React.Component {
   }
 }
 
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setWinner : winnerName => dispatch(setWinner(winnerName))
+  };
+}
+
 const mapStateToProps = state => {
   return {
     prRandEnum: getPrRendEnum(state),
     field:      getField(state),
-    delay:      getDelay(state)
+    delay:      getDelay(state),
+    playerName: getPlayerName(state)
   }
 }
 
-export default connect(mapStateToProps, undefined)(Board);
+export default connect(mapStateToProps, mapDispatchToProps)(Board);

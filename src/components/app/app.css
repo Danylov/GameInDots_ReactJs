@@ -1,0 +1,10 @@
+
+.App {
+    display:flex;
+    flex-direction:row;
+    flex-basis: 1000px;
+}
+
+#n_f, #l_f {
+    flex-grow: 1;
+}

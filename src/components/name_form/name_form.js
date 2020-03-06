@@ -2,39 +2,61 @@ import React from 'react';
 import Choice from "../choice/choice";
 import {begRandEnum} from '../../actions'
 import {connect} from "react-redux";
+import Board from "../board/board";
+import {getWinnerName} from "../../reducers";
 
 import './name_form.css';
 
 let prRandEnum = false;
+let playerName = "";
+let winnerName = "";
 
-const NameForm = ({submith}) => {
+class NameForm extends React.Component {
 
-    const submithName = (e) => {
-        e.preventDefault();
-        prRandEnum = true;
-        submith(prRandEnum);
-        // getName(inputName);
-    };
+    // componentDidUpdate(prevProps) {
+    //     if (this.props.winnerName !== prevProps.winnerName)  winnerName = this.props.winnerName;
+    // }
 
-    return (
-        <div>
-            <form>
-                <Choice />
-                <input type="text" placeholder="Enter your name" />
-                <button onClick={(e) => submithName(e)} >PLAY</button>
-            </form>
-        </div>
-    )
+       submithName = (e) => {
+            e.preventDefault();
+            prRandEnum = true;
+            let playerName_ = this.refs.playerName;
+            playerName = playerName_.value;
+            this.props.submith(prRandEnum, playerName);
+        };
+
+    render() {
+
+        const {winnerName} = this.props;
+
+        return (
+            <div>
+                <form>
+                    <Choice/>
+                    <input type="text" id="name" ref="playerName" placeholder="Enter your name"/>
+                    <button onClick={(e) => this.submithName(e)}>PLAY</button>
+                    <br/>
+                    <br/>
+                    <input type="text" readOnly id="winner" value = {winnerName} />
+                    <br/>
+                    <br/>
+                    <Board/>
+                </form>
+            </div>
+        )
+    }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        submith : prRandEnum => dispatch(begRandEnum(prRandEnum))
+        submith : (prRandEnum, playerName) => dispatch(begRandEnum(prRandEnum, playerName))
     };
 }
 
-// const mapDispatchToProps = dispatch => bindActionCreators({
-//     submith : prRandEnum => begRandEnum(prRandEnum)
-// }, dispatch);
+const mapStateToProps = state => {
+    return {
+        winnerName: getWinnerName(state)
+    }
+}
 
-export default connect(undefined, mapDispatchToProps)(NameForm);
+export default connect(mapStateToProps, mapDispatchToProps)(NameForm);

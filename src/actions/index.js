@@ -4,6 +4,7 @@ export const FETCH_DATA_SUCCESS = 'FETCH_DATA_SUCCESS';
 export const FETCH_DATA_ERROR   = 'FETCH_DATA_ERROR';
 export const ISSELECTED         = 'ISSELECTED';
 export const RAND_ENUM          = 'RAND_ENUM';
+export const WINNER             = 'WINNER';
 
 export function fetchDataPending() {
     return {
@@ -33,9 +34,17 @@ export const isSelected = event => {
     }
 }
 
-export const begRandEnum = (prRandEnum) => {
+export const begRandEnum = (prRandEnum, playerName) => {
     return {
         type: RAND_ENUM,
-        prRandEnum: prRandEnum
+        prRandEnum: prRandEnum,
+        playerName: playerName
+    }
+}
+
+export const setWinner = (winnerName) => {
+    return {
+        type: WINNER,
+        winnerName: winnerName
     }
 }
