@@ -1,7 +1,6 @@
 import React from 'react';
 import Choice from "../choice/choice";
-import {begRandEnum, RAND_ENUM} from '../../actions'
-import {bindActionCreators} from "redux";
+import {begRandEnum} from '../../actions'
 import {connect} from "react-redux";
 
 import './name_form.css';

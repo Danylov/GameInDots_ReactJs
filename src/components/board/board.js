@@ -7,6 +7,7 @@ import {getPrRendEnum, getField, getDelay} from "../../reducers";
 import './board.css';
 
 const CELL_SIZE   = 50; // px
+let timerId = null;
 
 class Board  extends React.Component {
 
@@ -22,7 +23,7 @@ class Board  extends React.Component {
     for (let y = 0; y < this.state.rows; y++) {
       board[y] = [];
       for (let x = 0; x < this.state.cols; x++) {
-        board[y][x] = false;
+        board[y][x] = 0;
       }
     }
     return board;
@@ -32,8 +33,11 @@ class Board  extends React.Component {
     let cells = [];
     for (let y = 0; y < this.state.rows; y++) {
       for (let x = 0; x < this.state.cols; x++) {
-        if (this.board[y][x]) {
-          cells.push({ x, y });
+// 0 - not active (white),                          1 - PC choose that cell (blue),
+// 2 - player clicked on cell after mode 1 (green), 3 - player not clicked on cell after mode 1 (red)
+        if (0 < this.board[y][x]) {
+          let mode = this.board[y][x];
+          cells.push({ x, y, mode});
         }
       }
     }
@@ -56,14 +60,17 @@ class Board  extends React.Component {
     const x = Math.floor(offsetX / CELL_SIZE);
     const y = Math.floor(offsetY / CELL_SIZE);
     if (0 <= x && x <= this.state.cols && 0 <= y && y <= this.state.rows) {
-      this.board[y][x] = !this.board[y][x];
+      if (this.board[y][x] === 1)  this.board[y][x] = 2;
     }
     this.setState({ cells: this.makeCells() });
   }
 
   setInit = () => {
     this.setState({rows : this.props.field, cols : this.props.field, cells: []},
-        () => {this.board = this.makeEmptyBoard()});
+        () => {
+          this.board = this.makeEmptyBoard();
+          if (this.props.prRandEnum === true)  timerId = setInterval(this.randomCell, this.props.delay);
+        });
   };
 
   componentWillMount() {
@@ -71,11 +78,37 @@ class Board  extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.field !== prevProps.field)  this.setInit();
+    if ((this.props.field !== prevProps.field) || (this.props.prRandEnum !== prevProps.prRandEnum))  this.setInit();
   }
 
+  randomCell = () => {
+    let x_cell = 0, y_cell = 0, kolCell = 0;
+    do {
+      kolCell = this.props.field * this.props.field;
+      let randCell = Math.floor(Math.random() * kolCell);
+      y_cell = Math.trunc(randCell / this.props.field);
+      x_cell = randCell - y_cell * this.props.field - 1;
+    }
+    while  (this.board[y_cell][x_cell] !== 0);
+    let sumGreen = 0, sumRed = 0;
+    for (let y = 0; y < this.state.rows; y++) {
+      for (let x = 0; x < this.state.cols; x++) {
+        if (this.board[y][x] === 1)  this.board[y][x] = 3;
+        if (this.board[y][x] === 2)  sumGreen++;
+        if (this.board[y][x] === 3)  sumRed++;
+      }
+    }
+    if ((Math.trunc(0.5 * kolCell) < sumGreen) || (Math.trunc(0.5 * kolCell) < sumRed))
+    {
+      this.board[y_cell][x_cell] = 0;
+      clearInterval(timerId);
+    }
+    else  this.board[y_cell][x_cell] = 1;
+    this.setState({ cells: this.makeCells() });
+  };
+
   render() {
-    const { field, delay, prRandEnum } = this.props;
+    const { field } = this.props;
     const BOARD_W_H = field * CELL_SIZE + 1;
     const {cells} = this.state;
 
@@ -84,7 +117,7 @@ class Board  extends React.Component {
              style={{ width:BOARD_W_H, height:BOARD_W_H, backgroundSize: `${CELL_SIZE}px ${CELL_SIZE}px`}}
              onClick={(e) => this.handleClick(e)}
              ref={(n) => { this.boardRef = n; }}>
-          {cells.map(cell => (<Cell x = {cell.x} y = {cell.y} CELL_SIZE = {CELL_SIZE} key = {uniqid()}/>
+          {cells.map(cell => (<Cell x = {cell.x} y = {cell.y} CELL_SIZE = {CELL_SIZE} mode = {cell.mode} key = {uniqid()}/>
           ))}
         </div>
     )
