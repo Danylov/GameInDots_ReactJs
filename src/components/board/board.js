@@ -73,7 +73,7 @@ class Board  extends React.Component {
           () => {
             this.props.setEndRandEnum(false);
             this.board = this.makeEmptyBoard();
-            timerId = setInterval(this.randomCell, this.props.delay);
+            if ((prevProps.begRandEnum === false) && (this.props.begRandEnum === true)) timerId = setInterval(this.randomCell, this.props.delay);
           });
     }
   }
