@@ -1,4 +1,4 @@
-import {FETCH_DATA_PENDING, FETCH_DATA_SUCCESS, FETCH_DATA_ERROR, ISSELECTED, RAND_ENUM, WINNER} from '../actions';
+import {FETCH_DATA_PENDING, FETCH_DATA_SUCCESS, FETCH_DATA_ERROR, ISSELECTED, BEG_RAND_ENUM, END_RAND_ENUM, PLAYER, WINNER} from '../actions';
 
 const initialState = {
     pending: false,
@@ -6,8 +6,10 @@ const initialState = {
     error: null,
     field: 5,
     delay: 2000,
-    prRandEnum: false,
-    playerName: ""
+    begRandEnum: false,
+    endRandEnum: false,
+    playerName: "",
+    winnerName: ""
 };
 
 export function Reducer(state = initialState, action) {
@@ -35,10 +37,19 @@ export function Reducer(state = initialState, action) {
                 field: action.field,
                 delay: action.delay
             }
-        case RAND_ENUM:
+        case BEG_RAND_ENUM:
             return {
                 ...state,
-                prRandEnum: action.prRandEnum,
+                begRandEnum: action.begRandEnum
+            }
+        case END_RAND_ENUM:
+            return {
+                ...state,
+                endRandEnum: action.endRandEnum
+            }
+        case PLAYER:
+            return {
+                ...state,
                 playerName: action.playerName
             }
         case WINNER:
@@ -56,6 +67,7 @@ export const getDataPending = state => state.pending;
 export const getDataError   = state => state.error;
 export const getField       = state => state.field;
 export const getDelay       = state => state.delay;
-export const getPrRendEnum  = state => state.prRandEnum;
+export const getBegRandEnum = state => state.begRandEnum;
+export const getEndRandEnum = state => state.endRandEnum;
 export const getPlayerName  = state => state.playerName;
 export const getWinnerName  = state => state.winnerName;

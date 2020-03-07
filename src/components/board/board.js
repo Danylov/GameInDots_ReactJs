@@ -2,8 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import uniqid from 'uniqid';
 import Cell from '../cell';
-import {getPrRendEnum, getField, getDelay, getPlayerName} from "../../reducers";
-import {setWinner} from "../../actions";
+import {getBegRandEnum, getField, getDelay, getPlayerName} from "../../reducers";
+import {setEndRandEnum, setWinner} from "../../actions";
 
 import './board.css';
 
@@ -66,20 +66,16 @@ class Board  extends React.Component {
     this.setState({ cells: this.makeCells() });
   }
 
-  setInit = () => {
-    this.setState({rows : this.props.field, cols : this.props.field, cells: []},
-        () => {
-          this.board = this.makeEmptyBoard();
-          if (this.props.prRandEnum === true)  timerId = setInterval(this.randomCell, this.props.delay);
-        });
-  };
-
-  componentWillMount() {
-    this.setInit();
-  }
-
   componentDidUpdate(prevProps) {
-    if ((this.props.field !== prevProps.field) || (this.props.prRandEnum !== prevProps.prRandEnum))  this.setInit();
+    if ((this.props.field !== prevProps.field) || ((prevProps.begRandEnum === false) && (this.props.begRandEnum === true)))
+    {
+      this.setState({rows : this.props.field, cols : this.props.field, cells: []},
+          () => {
+            this.props.setEndRandEnum(false);
+            this.board = this.makeEmptyBoard();
+            timerId = setInterval(this.randomCell, this.props.delay);
+          });
+    }
   }
 
   randomCell = () => {
@@ -105,6 +101,7 @@ class Board  extends React.Component {
       clearInterval(timerId);
       if (sumGreen < sumRed)  this.props.setWinner("Computer");
       else                    this.props.setWinner(this.props.playerName);
+      this.props.setEndRandEnum(true);
     }
     else  this.board[y_cell][x_cell] = 1;
     this.setState({ cells: this.makeCells() });
@@ -127,19 +124,18 @@ class Board  extends React.Component {
   }
 }
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
-    setWinner : winnerName => dispatch(setWinner(winnerName))
+    setEndRandEnum : endRandEnum => dispatch(setEndRandEnum(endRandEnum)),
+    setWinner      : winnerName => dispatch(setWinner(winnerName))
   };
 }
 
-const mapStateToProps = state => {
-  return {
-    prRandEnum: getPrRendEnum(state),
-    field:      getField(state),
-    delay:      getDelay(state),
-    playerName: getPlayerName(state)
-  }
-}
+const mapStateToProps = state => ({
+  begRandEnum: getBegRandEnum(state),
+  field:       getField(state),
+  delay:       getDelay(state),
+  playerName:  getPlayerName(state)
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(Board);

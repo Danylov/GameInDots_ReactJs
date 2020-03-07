@@ -1,40 +1,45 @@
 import React from 'react';
 import Choice from "../choice/choice";
-import {begRandEnum} from '../../actions'
+import {setBegRandEnum, setPlayer, setWinner} from '../../actions'
 import {connect} from "react-redux";
 import Board from "../board/board";
-import {getWinnerName} from "../../reducers";
+import {getBegRandEnum, getEndRandEnum, getWinnerName} from "../../reducers";
 
 import './name_form.css';
 
-let prRandEnum = false;
-let playerName = "";
-let winnerName = "";
+let CPlay = "PLAY";
 
 class NameForm extends React.Component {
 
-    // componentDidUpdate(prevProps) {
-    //     if (this.props.winnerName !== prevProps.winnerName)  winnerName = this.props.winnerName;
-    // }
+    submithName = (e) => {
+        e.preventDefault();
+        let playerName_ = this.refs.playerName;
+        let playerName = playerName_.value;
+        if  (playerName === "") alert("Please, input player name.");
+        else
+        {
+            this.props.setBegRandEnum(true);
+            this.props.setPlayer(playerName);
+            this.props.setWinner("");
+        }
+    };
 
-       submithName = (e) => {
-            e.preventDefault();
-            prRandEnum = true;
-            let playerName_ = this.refs.playerName;
-            playerName = playerName_.value;
-            this.props.submith(prRandEnum, playerName);
-        };
+    componentDidUpdate(prevProps) {
+        if ((prevProps.endRandEnum === false) && (this.props.endRandEnum === true))  this.props.setBegRandEnum(false);
+    }
 
-    render() {
+        render() {
 
-        const {winnerName} = this.props;
+        const {winnerName, begRandEnum, endRandEnum} = this.props;
+
+        if  ((begRandEnum === false) && (endRandEnum === true))  CPlay = "PLAY AGAIN";
 
         return (
             <div>
                 <form>
                     <Choice/>
                     <input type="text" id="name" ref="playerName" placeholder="Enter your name"/>
-                    <button onClick={(e) => this.submithName(e)}>PLAY</button>
+                    <button onClick={(e) => this.submithName(e)}>{CPlay}</button>
                     <br/>
                     <br/>
                     <input type="text" readOnly id="winner" value = {winnerName} />
@@ -47,16 +52,18 @@ class NameForm extends React.Component {
     }
 }
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
     return {
-        submith : (prRandEnum, playerName) => dispatch(begRandEnum(prRandEnum, playerName))
+        setBegRandEnum : begRandEnum => dispatch(setBegRandEnum(begRandEnum)),
+        setPlayer      : playerName => dispatch(setPlayer(playerName)),
+        setWinner      : winnerName => dispatch(setWinner(winnerName))
     };
 }
 
-const mapStateToProps = state => {
-    return {
-        winnerName: getWinnerName(state)
-    }
-}
+const mapStateToProps = state => ({
+    begRandEnum: getBegRandEnum(state),
+    endRandEnum: getEndRandEnum(state),
+    winnerName:  getWinnerName(state)
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(NameForm);
