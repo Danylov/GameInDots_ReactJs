@@ -3,7 +3,8 @@ import Choice from "../choice/choice";
 import {setBegRandEnum, setPlayer, setWinner} from '../../actions'
 import {connect} from "react-redux";
 import Board from "../board/board";
-import {getBegRandEnum, getEndRandEnum, getWinnerName} from "../../reducers";
+import {getBegRandEnum, getEndRandEnum, getField, getWinnerName} from "../../reducers";
+import { TextField, Button } from '@material-ui/core';
 
 import './name_form.css';
 
@@ -11,42 +12,69 @@ let CPlay = "PLAY";
 
 class NameForm extends React.Component {
 
+    constructor(props){
+        super(props);
+        this.state = {
+            playerName: ''
+        }
+    }
+
     submithName = (e) => {
         e.preventDefault();
-        let playerName_ = this.refs.playerName;
-        let playerName = playerName_.value;
-        if  (playerName === "") alert("Please, input player name.");
-        else
-        {
-            this.props.setBegRandEnum(true);
-            this.props.setPlayer(playerName);
-            this.props.setWinner("");
-        }
+        this.props.setBegRandEnum(true);
+        this.props.setPlayer(this.state.playerName);
+        this.props.setWinner("");
     };
+
+
+    handleChangeName = (e) => {
+        this.setState({
+            playerName: e.target.value
+        });
+    }
 
     componentDidUpdate(prevProps) {
         if ((prevProps.endRandEnum === false) && (this.props.endRandEnum === true))  this.props.setBegRandEnum(false);
     }
 
-        render() {
+    render() {
 
-        const {winnerName, begRandEnum, endRandEnum} = this.props;
+        const {winnerName, begRandEnum, endRandEnum, field} = this.props;
 
         if  ((begRandEnum === false) && (endRandEnum === true))  CPlay = "PLAY AGAIN";
 
         return (
             <div>
-                <form>
+                <div className="game_settings">
                     <Choice/>
-                    <input type="text" id="name" ref="playerName" placeholder="Enter your name"/>
-                    <button onClick={(e) => this.submithName(e)}>{CPlay}</button>
-                    <br/>
-                    <br/>
-                    <input type="text" readOnly id="winner" value = {winnerName} />
-                    <br/>
-                    <br/>
+                    <TextField
+                        className="player_name"
+                        label={"Enter your name"}
+                        value={this.state.playerName}
+                        onChange={this.handleChangeName}
+                    />
+                    <Button
+                        variant='contained'
+                        className="game_play"
+                        disabled={(field === 0) || (begRandEnum === true) || (this.state.playerName === "")}
+                        onClick={(e) => this.submithName(e)}>{CPlay}
+                    </Button>
+                </div>
+                <div className="message_settings">
+                    { (endRandEnum === true) ?
+                        // <input type="text" className="game_message" readOnly value = {winnerName} />
+                        <TextField
+                            className="game_message"
+                            readOnly
+                            value= {`Winner: ${winnerName}`}
+                        />
+                        : null
+                    }
+                </div>
+                <br/>
+                <div>
                     <Board/>
-                </form>
+                </div>
             </div>
         )
     }
@@ -63,7 +91,8 @@ const mapDispatchToProps = dispatch => {
 const mapStateToProps = state => ({
     begRandEnum: getBegRandEnum(state),
     endRandEnum: getEndRandEnum(state),
-    winnerName:  getWinnerName(state)
+    winnerName:  getWinnerName(state),
+    field:       getField(state)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(NameForm);

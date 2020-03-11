@@ -2,7 +2,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import store from '../../store';
 import NameForm from '../name_form';
-import LeaderForm from '../leader_form';
+import WinnerForm from '../winner_form';
 
 import './app.css';
 
@@ -15,7 +15,7 @@ const App = () => {
                     <NameForm />
                 </div>
                 <div id="l_f">
-                    <LeaderForm />
+                    <WinnerForm />
                 </div>
             </div>
         </Provider>

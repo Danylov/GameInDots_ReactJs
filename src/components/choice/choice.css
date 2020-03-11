@@ -1,0 +1,20 @@
+
+.game_mode {
+    position: relative;
+    width: 150px;
+    margin-right: 2px;
+}
+
+.game_mode select {
+    font-size: 120%;
+    width: 100%;
+}
+
+.game_mode select::after {
+  content: " after";
+}
+
+.game_mode option:checked {
+    background: #c3e8ec linear-gradient(#c3e8ec, #c3e8ec);
+    color: blue;
+}

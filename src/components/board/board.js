@@ -4,6 +4,7 @@ import uniqid from 'uniqid';
 import Cell from '../cell';
 import {getBegRandEnum, getField, getDelay, getPlayerName} from "../../reducers";
 import {setEndRandEnum, setWinner} from "../../actions";
+import postWinnerAction from "../../reducers/postWinner";
 
 import './board.css';
 
@@ -99,8 +100,11 @@ class Board  extends React.Component {
     {
       this.board[y_cell][x_cell] = 0;
       clearInterval(timerId);
-      if (sumGreen < sumRed)  this.props.setWinner("Computer");
-      else                    this.props.setWinner(this.props.playerName);
+      let winner = "";
+      (sumGreen < sumRed) ? winner = "Computer" : winner = this.props.playerName;
+      this.props.setWinner(winner);
+      const {postWinner} = this.props;
+      postWinner(winner);
       this.props.setEndRandEnum(true);
     }
     else  this.board[y_cell][x_cell] = 1;
@@ -127,7 +131,8 @@ class Board  extends React.Component {
 const mapDispatchToProps = dispatch => {
   return {
     setEndRandEnum : endRandEnum => dispatch(setEndRandEnum(endRandEnum)),
-    setWinner      : winnerName => dispatch(setWinner(winnerName))
+    setWinner      : winnerName => dispatch(setWinner(winnerName)),
+    postWinner     : winnerName => dispatch(postWinnerAction(winnerName))
   };
 }
 

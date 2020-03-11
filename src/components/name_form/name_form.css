@@ -1,0 +1,30 @@
+
+.game_settings {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    margin-bottom: 30px;
+}
+
+.game_settings .player_name {
+    min-width: 150px;
+    margin: 0 20px;
+}
+
+.game_settings .game_play {
+    min-width: 80px;
+}
+
+.message_settings {
+display: flex;
+justify-content: center;
+}
+
+.message_settings .game_message {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    font-size: 14px;
+    height: 15px;
+    min-width: 80px;
+}
