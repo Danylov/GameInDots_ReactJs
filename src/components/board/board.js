@@ -21,13 +21,7 @@ class Board  extends React.Component {
   };
 
   makeEmptyBoard() {
-    let board = [];
-    for (let y = 0; y < this.state.rows; y++) {
-      board[y] = [];
-      for (let x = 0; x < this.state.cols; x++) {
-        board[y][x] = 0;
-      }
-    }
+    let board = Array(this.state.rows).fill().map(() => Array(this.state.cols).fill(0));
     return board;
   }
 
@@ -89,14 +83,20 @@ class Board  extends React.Component {
     }
     while  (this.board[y_cell][x_cell] !== 0);
     let sumGreen = 0, sumRed = 0;
-    for (let y = 0; y < this.state.rows; y++) {
-      for (let x = 0; x < this.state.cols; x++) {
-        if (this.board[y][x] === 1)  this.board[y][x] = 3;
-        if (this.board[y][x] === 2)  sumGreen++;
-        if (this.board[y][x] === 3)  sumRed++;
-      }
-    }
-    if ((Math.trunc(0.5 * kolCell) < sumGreen) || (Math.trunc(0.5 * kolCell) < sumRed))
+
+    const fCells = Math.trunc(0.5 * kolCell);
+    this.board.forEach((b_str, i, board) => {
+      b_str.forEach((item, j, b_str) => {
+        switch (item) {
+          case 1: board[i][j] = 3;   break;
+          case 2: sumGreen++; break;
+          case 3: sumRed++;   break;
+          default:            break;
+        };
+      });
+    });
+
+    if ((fCells < sumGreen) || (fCells < sumRed))
     {
       this.board[y_cell][x_cell] = 0;
       clearInterval(timerId);
